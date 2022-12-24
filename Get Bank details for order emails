@@ -1,0 +1,29 @@
+//Get Bank details for order emails
+if ($order->get_payment_method() == 'bacs') {
+    $bacs_info = get_option( 'woocommerce_bacs_accounts');
+    if ( $bacs_info ) {
+        foreach ( $bacs_info as $account ) {
+            $msg = '<ul class="account">';
+            if($account['account_name']){
+                    $msg.='<li>Account name: <b>' . esc_attr( wp_unslash( $account['account_name'] ) ) . '</b></li>';
+            }
+            if($account['account_number']){
+                    $msg.='<li>Account number: <b>' . esc_attr( $account['account_number'] ) . '</b></li>';
+            }
+            if($account['bank_name']){
+                    $msg.='<li>Bank name: <b>' . esc_attr( wp_unslash( $account['bank_name'] ) ) . '</b></li>';
+            }
+            if($account['sort_code']){
+                    $msg.='<li>Sort code: <b>' . esc_attr( $account['sort_code'] ) . '</b></li>';
+            }
+            if($account['iban']){
+                    $msg.='<li>IBAN: <b>' . esc_attr( $account['iban'] ) . '</b></li>';
+            }
+            if($account['bic']){
+                    $msg.='<li>BIC/Swift: <b>' . esc_attr( $account['bic'] ) . '</b></li>';
+            }
+            $msg.='</ul>';
+            echo $msg;
+        }
+    }
+}
