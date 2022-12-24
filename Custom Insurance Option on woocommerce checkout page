@@ -1,0 +1,113 @@
+// Custom Insurance Option on woocommerce checkout page & admin dashboard via functions.php
+//1. https://wpbeaches.com/add-a-required-checkbox-field-in-woocommerce-checkout-page/
+//2. https://easywpcode.com/add-a-required-checkbox-fields-on-woocommerce-checkout-page/
+
+
+
+//add_action( 'woocommerce_review_order_before_submit', 'bt_add_custom_insurance_checkbox', 10 );
+add_action( 'woocommerce_checkout_before_terms_and_conditions', 'bt_add_custom_insurance_checkbox', 10 );
+/**
+ * Add WooCommerce additional Checkbox checkout field
+ */
+function bt_add_custom_insurance_checkbox() {
+        global $woocommerce;
+   
+        $county         = array('SG');
+        if (! in_array( $woocommerce->customer->get_shipping_country(), $county ) ) { 
+                woocommerce_form_field( 'custom_insurance_checkbox', array( // CSS ID
+                'type'          => 'checkbox',
+                'class'         => array('form-row mycheckbox'), // CSS Class
+                'label_class'   => array('woocommerce-form__label woocommerce-form__label-for-checkbox checkbox'),
+                'input_class'   => array('woocommerce-form__input woocommerce-form__input-checkbox input-checkbox'),
+                'required'      => false, // Mandatory or Optional
+                'label'         => 'Add shipping insurance', // Label 
+                ));    
+        }
+}
+
+
+add_action( 'woocommerce_checkout_update_order_meta', 'bt_checkout_field_order_meta_db' );
+/**
+ * Add custom field as order meta with field value to database
+ */
+function bt_checkout_field_order_meta_db( $order_id ) {
+    if ( ! empty( $_POST['custom_insurance_checkbox'] ) ) {
+        update_post_meta( $order_id, 'custom_insurance_checkbox', sanitize_text_field( $_POST['custom_insurance_checkbox'] ) );
+    }
+}
+
+
+add_action( 'woocommerce_admin_order_data_after_billing_address', 'bt_checkout_field_display_admin_order_meta', 10, 1 );
+/**
+ * Display field value on the backend WooCOmmerce order
+ */
+function bt_checkout_field_display_admin_order_meta($order){
+    echo '<p><strong>'.__('Checkout Checkbox Label').':</strong> ' . get_post_meta( $order->get_id(), 'custom_insurance_checkbox', true ) . '<p>'; 
+}
+
+
+add_filter('woocommerce_email_order_meta_keys', 'bt_custom_order_meta_email');
+/**
+ * Display field value on the order email
+ */
+function bt_custom_order_meta_email( $keys ) {
+     $keys[] = 'custom_insurance_checkbox'; 
+     return $keys;
+}
+
+
+
+/**
+ * Update the cart form when click checkbox of insurance
+ */
+add_action( 'wp_footer', 'custom_script_to_update_cart_form' );
+function custom_script_to_update_cart_form() {
+    if ( ! ( is_checkout() && ! is_wc_endpoint_url() ) )
+        return;
+    ?>
+    <script type="text/javascript">
+    (function($){
+        $('form.checkout').on('change', 'input[name="custom_insurance_checkbox"]', function(){
+            $("body").trigger('update_checkout');
+        });
+    })(jQuery);
+    </script>
+    <?php
+}
+
+
+/**
+ * Add a 3% surcharge to your cart / checkout
+ * change the $percentage to set the surcharge to a value to suit
+ */
+add_action( 'woocommerce_cart_calculate_fees','woocommerce_custom_surcharge', 43, 1 );
+function woocommerce_custom_surcharge($cart) {
+          global $woocommerce;
+
+        if ( ! $_POST || ( is_admin() && ! is_ajax() ) ) {
+                return;
+        }
+
+        if ( isset( $_POST['post_data'] ) ) {
+                parse_str( $_POST['post_data'], $post_data );
+        } else {
+                $post_data = $_POST;
+        }
+
+        $county         = array('SG');
+
+        if (! in_array( $woocommerce->customer->get_shipping_country(), $county ) ) { 
+                if (! isset($post_data['custom_insurance_checkbox'])) {
+
+                } else {
+                        $percentage = 0.03;
+                        // $surcharge = ( $woocommerce->cart->cart_contents_total + $woocommerce->cart->shipping_total ) * $percentage;        
+                        // $surcharge = ( $cart->cart_contents_total ) * $percentage;        
+            $surcharge = ( $cart->get_subtotal() ) * $percentage;        
+                        // $cart->add_fee( 'Shipping Insurance(3%)', $surcharge, true, '' );
+            $cart->add_fee( __( 'Shipping Insurance(3%)', 'woocommerce' ), $surcharge );
+                }
+        } else {
+
+        }
+}
