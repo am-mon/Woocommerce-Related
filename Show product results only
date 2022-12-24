@@ -1,0 +1,22 @@
+<?php
+/**
+ * The template for displaying search results pages.
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#search-result
+ *
+ * @package Astra
+ * @since 1.0.0
+ */
+
+
+
+if(isset($_GET['s'])){
+        $s = $_GET['s'];
+}else{
+        $s ='';
+}
+wp_redirect(site_url().'/?s='.$s.'&post_type=product');
+exit();
+
+?>
+
