@@ -1,0 +1,154 @@
+
+<?php 
+
+$taxonomy     = 'product_cat';
+$orderby      = 'name';
+$show_count   = 0;
+$pad_counts   = 0;
+$hierarchical = 1;     
+$title        = '';
+$empty        = 0;
+
+
+$current_term = is_tax ? get_queried_object() : null;
+$classactive = "";
+
+
+$args = array(
+    'taxonomy'     => $taxonomy,
+    'order' => 'ASC',
+    'show_count'   => $show_count,
+    'pad_counts'   => $pad_counts,
+    'hierarchical' => $hierarchical,
+    'title_li'     => $title,
+    'hide_empty'   => $empty,
+    // 'exclude' => array(45) //Hide "All" text category
+);
+
+
+$all_categories = get_categories( $args );
+
+if( $all_categories ) { ?>
+<div class="custom_product_cate_wrap">
+    <ul class="custom_product_cate">
+
+        <?php foreach ($all_categories as $cat) { ?>
+
+            <?php if($current_term != null && $current_term->term_taxonomy_id == $cat->term_taxonomy_id) {
+                $classactive = "active";
+            } else {
+                $classactive = "";
+            }?>
+
+            <?php if($cat->category_parent == 0) { ?>
+                <?php 
+                    $category_id = $cat->term_id; 
+                    $cat_thumb_id = get_woocommerce_term_meta( $category_id, 'thumbnail_id', true );
+                    // $cat_thumb_url = wp_get_attachment_thumb_url( $cat_thumb_id );
+                ?>
+
+                <li class="<?php echo $classactive ?>">
+                    <a href="<?php echo get_term_link($cat->slug, 'product_cat'); ?>">
+                        <?php //if($cat_thumb_url) { ?>
+                            <!-- <img src="<?php echo $cat_thumb_url; ?>"> -->
+                        <?php //} ?>
+
+                        <?php if( get_field('product_category_icon', $cat) ) { ?>
+                            <img src="<?php the_field('product_category_icon', $cat); ?>" class="img_normal">
+                            <img src="<?php the_field('product_category_icon_active', $cat); ?>" class="img_active">
+                        <?php } ?>
+                        <?php echo $cat->name; ?>
+                    </a>
+                    
+                    <?php 
+                    $args2 = array(
+                        'taxonomy'     => $taxonomy,
+                        'parent'       => $category_id,
+                        'order' => 'ASC',
+                        'show_count'   => $show_count,
+                        'pad_counts'   => $pad_counts,
+                        'hierarchical' => $hierarchical,
+                        'title_li'     => $title,
+                        'hide_empty'   => $empty
+                    );
+                    $sub_cats = get_categories( $args2 );
+                    if($sub_cats) { ?>
+                        <span class="sub_cate_expand"></span>
+                        <ul class="sub_cate">
+                            <?php foreach($sub_cats as $sub_category) { ?>
+
+                                <?php if($current_term != null && $current_term->term_taxonomy_id == $sub_category->term_taxonomy_id) {
+                                    $classactive = "active";
+                                } else {
+                                    $classactive = "";
+                                }?>
+
+                                <?php 
+                                    //$sub_category_id = $sub_category->term_id; 
+                                    //$sub_cat_thumb_id = get_woocommerce_term_meta( $sub_category_id, 'thumbnail_id', true );
+                                    //$sub_cat_thumb_url = wp_get_attachment_thumb_url( $sub_cat_thumb_id );
+                                ?>
+                        
+                                <li class="<?php echo $classactive ?>">
+                                    <a href="<?php echo get_term_link($sub_category->slug, 'product_cat'); ?>">
+                                        <!-- <?php if($sub_cat_thumb_url) { ?>
+                                            <img src="<?php echo $sub_cat_thumb_url; ?>">
+                                        <?php } ?> -->
+                                        <?php echo $sub_category->name; ?>
+                                    </a>
+
+                                    <?php 
+                                    $args3 = array(
+                                        'taxonomy'     => $taxonomy,
+                                        'parent'       =>  $sub_category->term_id,
+                                        'order' => 'ASC',
+                                        'show_count'   => $show_count,
+                                        'pad_counts'   => $pad_counts,
+                                        'hierarchical' => $hierarchical,
+                                        'title_li'     => $title,
+                                        'hide_empty'   => $empty
+                                    );
+
+                                    $sub_cats3 = get_categories( $args3 );
+                                    if($sub_cats3) { ?>
+                                        <ul class="sub_cate">
+                                            <?php foreach($sub_cats3 as $sub_category3) {  ?>
+
+                                                <?php if($current_term != null && $current_term->term_taxonomy_id == $sub_category3->term_taxonomy_id) {
+                                                    $classactive = "active";
+                                                } else {
+                                                    $classactive = "";
+                                                }?>
+
+                                                <li class="<?php echo $classactive ?>">
+                                                    <a href="<?php echo get_term_link($sub_category3->slug, 'product_cat'); ?>"><?php echo $sub_category3->name; ?></a>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    <?php } ?>
+
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    <?php } ?>
+                </li>  
+
+            <?php } ?> 
+        <?php } ?>
+
+    </ul>
+</div>
+
+<script>
+jQuery(document).ready(function ($) {
+if( $(".sub_cate_expand") ) {
+    $(".sub_cate_expand").click(function(){
+        $(this).toggleClass("active");
+        $(this).next("ul.sub_cate").slideToggle();
+    });
+}
+});
+</script>
+
+<?php }
+?>
