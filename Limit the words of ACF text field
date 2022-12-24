@@ -1,0 +1,1 @@
+<li class="tab__unit"><?php echo wp_trim_words( get_sub_field('tab_title' ), $num_words = 2, $more = '...' ); ?></li>
