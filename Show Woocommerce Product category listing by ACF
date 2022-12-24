@@ -1,0 +1,63 @@
+//all product category listing with query  (Product category Image is acf field)
+
+<?php
+$taxonomies = array( 
+    'product_cat'
+);
+$args = array(
+    'orderby'           => 'name', 
+    'order'             => 'ASC',
+    'hide_empty'        => false, 
+    'exclude'           => array(15), 
+    'exclude_tree'      => array(), 
+    'include'           => array(),
+    'number'            => '', 
+    'fields'            => 'all', 
+    'slug'              => '',
+    'parent'            => '',
+    'hierarchical'      => true, 
+    'child_of'          => 0,
+    'childless'         => false,
+    'get'               => '', 
+    'name__like'        => '',
+    'description__like' => '',
+    'pad_counts'        => false, 
+    'offset'            => '', 
+    'search'            => '', 
+    'cache_domain'      => 'core'
+); 
+ 
+ $terms = get_terms($taxonomies, $args);
+ $print_terms = 0;
+
+ if ( ! empty( $terms ) && ! is_wp_error( $terms ) ){ ?>
+    <ul class="product_cate_3col all_cate_lists">
+    <?php foreach ( $terms as $term ) { ?>
+    <li style="background: url(<?php echo the_field('product_category_image', $term); ?>);">
+        <a href="<?php echo get_term_link($term->slug, 'product_cat'); ?>">
+            <div class="product_cate_3col_title"><?php echo $term->name; ?></div>
+        </a>
+    </li>
+    <?php } ?>
+    </ul>
+<?php } ?>
+
+
+=========================================
+
+
+//Show categories with ACF taxonomy (Product category Image is acf field)
+<?php 
+$terms = get_field('choose_product_cate');
+
+if( $terms ): ?>
+    <ul class="product_cate_3col">
+    <?php foreach( $terms as $term ): ?>
+        <li style="background: url(<?php echo the_field('product_category_image', $term); ?>);">
+            <a href="<?php echo esc_url( get_term_link( $term ) ); ?>">
+                <div class="product_cate_3col_title"><?php echo $term->name; ?></div>
+            </a>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
