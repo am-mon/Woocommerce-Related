@@ -1,0 +1,20 @@
+<?php $product_attributes = get_post_meta( get_the_ID(), '_product_attributes' ); ?>
+<ul>
+    <?php 
+        foreach ($product_attributes as $attribute) {
+            foreach ($attribute as $attribute) { ?>
+            <li>
+                <span class="attr_name">
+                    <?php $attrnames = str_replace("pa_", "", $attribute['name']);
+                        echo str_replace("-", " ", $attrnames);
+                    ?>
+                </span>
+                <span class="attr_value">
+                    <?php $attrvalue = array( wc_get_product_terms( get_the_ID(), $attribute['name'], array( 'fields' => 'names' ) ) );
+                        $attrvalues = implode(",", $attrvalue[0]);
+                        echo $attrvalues;
+                    ?>
+                </span>
+            </li>
+    <?php } } ?>
+</ul>
