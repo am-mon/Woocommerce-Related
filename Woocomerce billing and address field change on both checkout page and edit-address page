@@ -1,0 +1,12 @@
+//Woocomerce billing and address field change on both checkout page and edit-address page
+
+//Change the shipping address label : Company Name to Phone number
+add_filter( 'woocommerce_checkout_fields' , 'custom_rename_wc_checkout_fields' );
+// Change placeholder and label text
+function custom_rename_wc_checkout_fields( $fields ) {
+  $fields['shipping']['shipping_company']['placeholder'] = '';
+  $fields['shipping']['shipping_company']['label'] = 'Phone';
+  $fields['shipping']['shipping_company']['type'] = 'number';
+  $fields['shipping']['shipping_company']['required'] = true;
+  return $fields;
+}
