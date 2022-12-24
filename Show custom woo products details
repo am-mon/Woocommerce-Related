@@ -1,0 +1,112 @@
+//Show custom woo products meta
+
+<?php
+global $product;
+echo '<div class="product_meta_details">';
+
+//Skin Type (Taxonomy)
+if( $product ) {
+    if( has_term('', 'skin_type') ){
+        echo '<b>Skin Type: </b>';
+        echo get_the_term_list( $post->ID, 'skin_type','', ', ', '' );
+        echo '<br>';
+    }
+}
+
+
+//Net Weight
+if( $product ) {
+    if ( $product->has_weight() ) {
+        echo '<b>Net Weight: </b>' . $product->get_weight() .'ml<br>';
+    }
+}
+
+//Product Code
+if( $product ) {
+    if( $product->get_sku() ) {
+        echo '<b>Product Code: </b>' . $product->get_sku();
+    }
+}
+
+echo '</div>';
+?>
+
+
+
+================================================
+
+//for attributes
+<?php
+if ( $product->get_attribute( 'book-author' ) ) {
+    $authors = $product->get_attribute( 'book-author' );
+    $author_html = '<div class="author-wrapper">';
+    if ( $authors ) {
+            $author_html .= 'By&nbsp;<span class="author">' . $authors . '</span>';
+    } else {
+            $author_html .= '&nbsp;';
+    }
+    $author_html .= '</div>';
+    echo $author_html;
+} 
+?>
+
+================================================
+
+
+//for ACF etc..
+<?php 
+global $product;
+if ( is_product() ) { ?>
+    <table class="product_other_info_lists">
+        <?php
+        $terms = wp_get_post_terms( get_the_ID(), 'product_tag', array( 'order' => 'ASC') );
+        if( ! empty( $terms ) ) : ?>
+        <tr>
+        <th>Tags: </th>
+        <td>
+            <span class="item_tags">
+                <?php foreach( $terms as $term ) : ?>
+                    <span><a href="<?php echo get_term_link($term); ?>"><?php echo $term->name; ?></a></span>
+                <?php endforeach; ?>
+            </span>
+        </td>
+        </tr>
+        <?php endif; ?>
+
+
+        <?php if( get_field('isbn') ) { ?>
+            <tr>
+                <th>ISBN: </th>
+                <td><?php the_field('isbn'); ?></td>
+            </tr>
+        <?php }?>
+
+
+        <?php if( get_field('page_count') ) { ?>
+            <tr>
+                <th>Page Count: </th>
+                <td><?php the_field('page_count'); ?></td>
+            </tr>
+        <?php }?>
+
+
+        <?php if( get_field('year_published') ) { ?>
+            <tr>
+                <th>Year Published: </th>
+                <td><?php the_field('year_published'); ?></td>
+            </tr>
+        <?php }?>
+
+
+        <?php if ( $product->has_dimensions() ) { ?>
+            <tr>
+                <th>Size: </th>
+                <td><?php echo esc_html( wc_format_dimensions( $product->get_dimensions( false ) ) ); ?></td>
+            </tr>
+        <?php }?>
+
+    </table>
+<?php } ?>
+
+
+
