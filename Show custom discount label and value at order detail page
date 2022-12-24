@@ -1,0 +1,26 @@
+<!-- order-details.php -->
+<!-- Show custom discount label and value at order detail page when there is custom discount type.-->
+<?php
+    foreach ( $order->get_order_item_totals() as $key => $total ) {
+
+        $is_ocbc_order = get_post_meta( $order_id, 'is_ocbc_order', true );
+        $ocbc_discount_title = get_field('ocbc_discount_title');
+        $ocbc_discount_desc  = get_field('ocbc_discount_description');
+
+        if( $total['label'] == 'Discount:' && $is_ocbc_order == 'yes') {
+            $total_label = __( '<span class="ocbc_discount_title">' . $ocbc_discount_title . '</span><span class="ocbc_discount_desc">' . $ocbc_discount_desc . '</span>', 'woocommerce' );
+        }else{
+            $total_label = $total['label'];
+        }
+        ?>
+        <tr>
+            <th scope="row">
+                <?php //echo esc_html( $total['label'] ); ?>
+                <?php echo $total_label; ?>
+            </th>
+            <td><?php echo ( 'payment_method' === $key ) ? esc_html( $total['value'] ) : wp_kses_post( $total['value'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
+        </tr>
+
+    <?php
+    }
+?>
