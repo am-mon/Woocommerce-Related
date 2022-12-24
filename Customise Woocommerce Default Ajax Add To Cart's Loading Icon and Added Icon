@@ -1,0 +1,81 @@
+//Customise Ajax Add To Cart's Loading Icon and Added Icon
+li.product .astra-shop-summary-wrap .button.ajax_add_to_cart {
+text-align: center !important;
+// transition: 0s all;
+&.loading {
+    transition: 0s all !important;
+    color: rgba(255,255,255,0) !important;
+    &:after {
+    display: none !important;
+    }
+    &:before {
+    content: "\f1ce";
+    font-family: "Font Awesome 5 Free";
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 900;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    color: #ffffff !important;
+    animation: spin 2s linear infinite;
+    display: block;
+    margin: auto !important;
+    line-height: 1em !important;
+    }
+}
+&.added {
+    transition: 2s all linear !important;
+    color: rgba(255,255,255,0) !important;
+    &:after {
+    display: none !important;
+    }
+    &::before {
+    content: "" !important;
+    display: block;
+    width: 32px !important;
+    height: 32px !important;
+    background-image: url(../images/added-cart-tick-icon.svg) !important;
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    z-index: 99;
+    visibility: visible;
+    opacity: 1 !important;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    position: absolute !important;
+    margin: auto;
+    transition: 3s opacity linear !important;
+    }
+}
+}
+
+a.added_to_cart.wc-forward {
+display: none !important;
+}
+
+
+
+//Ajax Add To Cart's Added Icon remove after added on product archive pages
+if( $("li.product").length !== 0 ) {
+    $(document.body).on('click', '.ajax_add_to_cart', function(event){
+        $this = $(this); 
+    });
+    $(document.body).on('added_to_cart', function(event,b,data){
+        // console.log("added");
+        // console.log( $this.parents("li.product").find("h2.woocommerce-loop-product__title").text() );
+        setTimeout(function(){ 
+            $this.removeClass("added");
+        }, 1500);
+    });
+}
