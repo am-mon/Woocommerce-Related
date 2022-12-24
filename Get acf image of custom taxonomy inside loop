@@ -1,0 +1,31 @@
+<?php  if ( is_product() ) { ?>
+
+    <?php if( get_field('domain_winks') ): ?>
+        <div class="domain_wrap">
+            <div class="domain_note">
+                <span class="domain_note_btn"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/icon-question.svg"></span>
+                <div class="domain_note_box">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                </div>
+            </div>
+
+            <ul class="product_domains">
+                <?php while( has_sub_field('domain_winks') ): ?>
+                    <li>
+                        <?php $wink = get_term( get_sub_field('wink') , 'wink');  ?>
+                        <img class="domain_winks" src="<?php the_field('wink_badge', $wink); ?>">
+
+
+                        <?php $domain = get_term( get_sub_field('domain') , 'domain');  ?>  
+                        <img class="domain_img" src="<?php the_field('cate_img_detail', $domain); ?>"><br>
+                        <span class="domain_name"><?php echo $domain->name; ?></span><br>
+                        <span class="domain_desc"><?php echo $domain->description; ?></span>
+                    </li>
+                <?php endwhile; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+<?php } ?>
+
