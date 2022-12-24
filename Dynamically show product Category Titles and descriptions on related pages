@@ -1,0 +1,50 @@
+//Product Category Titles and descriptions for Product detail page
+<?php  if ( is_product() ) { ?>
+
+<?php global $post, $product;
+    $categ = $product->get_categories();
+    $term = get_term_by ( 'name' , strip_tags($categ), 'product_cat' );
+?>
+
+<h1 class="top_banner_title">
+    <?php echo $term->name; ?>
+    <span class="title_icon"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/title-icon-tree.svg"></span>
+</h1>
+<?php if( $term->description ) { ?>
+    <div class="divider_img"><img src='<?php echo get_stylesheet_directory_uri(); ?>/assets/images/divider.svg'></div>
+    <div class="top_banner_desc"><?php echo $term->description; ?></div>
+<?php } ?>
+
+<?php } ?>
+
+
+========================================================
+
+
+//Product Category Titles and descriptions for Product Shop/Category page
+<?php
+$term_object = get_queried_object();
+?>
+
+<?php if( is_product_category() ) { ?>
+
+    <h1 class="top_banner_title">
+        <?php echo $term_object->name; ?>
+        <span class="title_icon"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/title-icon-tree.svg"></span>
+    </h1>
+    <?php if( $term_object->description ) { ?>
+        <div class="divider_img"><img src='<?php echo get_stylesheet_directory_uri(); ?>/assets/images/divider.svg'></div>
+        <div class="top_banner_desc"><?php echo $term_object->description; ?></div>
+    <?php } ?>
+
+<?php } else { ?>
+
+    <h1 class="top_banner_title">
+         Products
+         <span class="title_icon"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/title-icon-tree.svg"></span>
+    </h1>
+
+<?php } ?>
+ 
+
+
