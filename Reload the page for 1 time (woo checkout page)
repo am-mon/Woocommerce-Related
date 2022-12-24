@@ -1,0 +1,15 @@
+//Reload the page for 1 time (woo checkout page)
+
+add_action('woocommerce_before_thankyou', 'woocommerce_before_thankyou', 10 , 1);
+function woocommerce_before_thankyou() {
+    echo "
+        <script>
+        window.onload = function() {
+            if(!window.location.hash) {
+                window.location = window.location + '#loaded';
+                window.location.reload();
+            }
+        }
+        </script>
+    ";
+}
