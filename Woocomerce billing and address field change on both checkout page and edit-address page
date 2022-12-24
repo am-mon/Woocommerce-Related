@@ -1,4 +1,6 @@
 //Woocomerce billing and address field change on both checkout page and edit-address page
+//https://rudrastyh.com/woocommerce/billing-and-shipping-address-fields.html
+//https://stackoverflow.com/questions/57729859/customize-addresses-fields-on-woocommerce-my-account-and-checkout
 
 //Change the shipping address label : Company Name to Phone number
 add_filter( 'woocommerce_checkout_fields' , 'custom_rename_wc_checkout_fields' );
