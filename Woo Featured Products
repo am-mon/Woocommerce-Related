@@ -1,0 +1,175 @@
+//Featured Proudcts Hard Code with slick slider
+<?php
+
+    $meta_query  = WC()->query->get_meta_query();
+    $tax_query   = WC()->query->get_tax_query();
+    $tax_query[] = array(
+        'taxonomy' => 'product_visibility',
+        'field'    => 'name',
+        'terms'    => 'featured',
+        'operator' => 'IN',
+    );
+
+    $args = array(
+        'post_type'   =>  'product',
+        'stock'       =>  1,
+        'showposts'   =>  12,
+        'meta_key'       => '_price',
+        'orderby'     =>  'meta_value_num',
+        'order'       =>  'asc',
+        'post__in'            => wc_get_featured_product_ids(), $tax_query,
+    );
+
+    $loop = new WP_Query( $args );
+?>
+
+<div class="featured_products_wrap">
+    <ul class="product_slider featured_products">
+        <?php
+        while ( $loop->have_posts() ) : $loop->the_post(); global $product; ?>
+            
+        <li class="featured_products_lists <?php if ( !$product->is_in_stock() ) { echo 'outofstock'; }?>">
+                <div class="item_imgBox">
+                    <a href="<?php echo get_permalink( $product->ID ); ?>"><?php echo woocommerce_get_product_thumbnail(array(500,500)); ?></a>
+                </div>
+                <div class="item_textBox">
+                    <p class="collection_name">
+                        <?php $terms = get_the_terms( $post->ID, 'collection' ); 
+                            if (is_array($terms) && !empty($terms)) {
+                                foreach($terms as $term) {
+                                    $termlinks = get_term_link($term);
+                                    echo ' <a href="' . $termlinks . '">' . $term->name . '</a>'; 
+                                }
+                            } else{
+                                    
+                            }
+                        ?>
+                        </p>
+                        <h3 class="item_title"><?php the_title(); ?></h3>
+                        <?php if ( $price_html = $product->get_price_html() ) : ?>
+                        <p class="item_price">
+                            <?php echo $price_html; ?>
+                            <?php if ( !$product->is_in_stock() ) {
+                                echo '<span class="soldout_text">' . __( 'SOLD', 'woocommerce' ) . '</span>';
+                            }?>
+                        </p>
+                    <?php endif; ?>
+                    <a href="<?php echo get_permalink( $product->ID ); ?>" class="add_to_bag_btn">Add to Bag</a>
+                </div>
+            </li>
+
+        <?php 
+            endwhile;
+            wp_reset_query(); 
+        ?>
+    </ul>
+
+    <script>
+    jQuery(document).ready(function($) {
+        $('.product_slider').slick({
+            autoplay: false,
+            dots: false,
+            prevArrow:"<div class='slider_arrows prev' ><img src='<?php echo get_stylesheet_directory_uri(); ?>/assets/images/icon-arrow-left.svg'></div>",
+            nextArrow:"<div class='slider_arrows next' ><img src='<?php echo get_stylesheet_directory_uri(); ?>/assets/images/icon-arrow-right.svg'></div>",
+            swipeToSlide: true,
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            responsive: [
+                {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                }
+                },
+                {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    centerMode: false
+                }
+                }
+            ]
+        });
+    });
+    </script>
+</div>
+
+============================================
+
+
+//Featured Proudcts query Code with slick slider
+<?php
+    $meta_query  = WC()->query->get_meta_query();
+    $tax_query   = WC()->query->get_tax_query();
+    $tax_query[] = array(
+        'taxonomy' => 'product_visibility',
+        'field'    => 'name',
+        'terms'    => 'featured',
+        'operator' => 'IN',
+    );
+    
+    $args = array(
+        'post_type'   =>  'product',
+        'stock'       =>  1,
+        'showposts'   =>  12,
+        'meta_key'       => '_price',
+        'orderby'     =>  'meta_value_num',
+        'order'       =>  'asc',
+        'post__in'            => wc_get_featured_product_ids(), $tax_query,
+    );
+
+    $loop = new WP_Query( $args );
+?>
+    
+<div class="featured_products_wrap">
+    <ul class="product_slider featured_products">
+        <?php
+        while ( $loop->have_posts() ) : $loop->the_post(); global $product; 
+            global $post; 
+            setup_postdata( $post ); 
+            woocommerce_get_template_part( 'content', get_post_type() );
+            wp_reset_postdata();
+        endwhile;
+        ?>
+    </ul>
+
+    <script>
+    jQuery(document).ready(function($) {
+        $('.product_slider').slick({
+            autoplay: false,
+            dots: false,
+            prevArrow:"<div class='slider_arrows prev' ><img src='<?php echo get_stylesheet_directory_uri(); ?>/assets/images/btn-slide-left.svg'></div>",
+            nextArrow:"<div class='slider_arrows next' ><img src='<?php echo get_stylesheet_directory_uri(); ?>/assets/images/btn-slide-right.svg'></div>",
+            swipeToSlide: true,
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            responsive: [
+                {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                }
+                },
+                {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    centerMode: false
+                }
+                }
+            ]
+        });
+    });
+    </script>
+</div>
+
+
+
+
+
+
+
