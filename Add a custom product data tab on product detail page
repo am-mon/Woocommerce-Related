@@ -1,0 +1,77 @@
+/**
+* Add a custom product data tab
+*/
+add_filter( 'woocommerce_product_tabs', 'woo_new_product_tab' );
+function woo_new_product_tab( $tabs ) {
+    // Adds the new tab
+    if( get_field('free_delivery') ) {
+        $tabs['free_delivery_tab'] = array(
+            'title'         => __( 'Free Delivery', 'woocommerce' ),
+            'priority'         => 50,
+            'callback'         => 'free_delivery_tab_content'
+        );
+    }
+
+    if( get_field('care_instruction') ) {
+        $tabs['care_instruction_tab'] = array(
+            'title'         => __( 'Care Instruction', 'woocommerce' ),
+            'priority'         => 50,
+            'callback'         => 'care_instruction_content'
+        );
+    }
+
+    if( get_field('ensure_the_quality') ) {
+        $tabs['ensure_quality_tab'] = array(
+            'title'         => __( 'What are we doing to ensure the quality?', 'woocommerce' ),
+            'priority'         => 50,
+            'callback'         => 'ensure_quality_content'
+        );
+    }
+
+    if( get_field('best_way_to_conitnue') ) {
+        $tabs['best_way_tab'] = array(
+            'title'         => __( 'Best Way to Conitnue', 'woocommerce' ),
+            'priority'         => 50,
+            'callback'         => 'best_way_content'
+        );
+    }
+
+    return $tabs;
+}
+
+function free_delivery_tab_content() {
+    echo the_field('free_delivery');
+}
+function care_instruction_content() {
+    echo the_field('care_instruction');
+}
+function ensure_quality_content() {
+    echo the_field('ensure_the_quality');
+}
+function best_way_content() {
+    echo the_field('best_way_to_conitnue');
+}
+
+
+
+/**
+* Reorder product data tabs
+*/
+add_filter( 'woocommerce_product_tabs', 'woo_reorder_tabs', 98 );
+function woo_reorder_tabs( $tabs ) {
+    if( get_field('free_delivery') ) { 
+        $tabs['free_delivery_tab']['priority'] = 10; 
+    }
+    if( get_field('care_instruction') ) {
+        $tabs['care_instruction_tab']['priority'] = 15;
+    }
+    if( get_field('ensure_the_quality') ) {
+        $tabs['ensure_quality_tab']['priority'] = 20;
+    }
+    if( get_field('best_way_to_conitnue') ) {
+        $tabs['best_way_tab']['priority'] = 25;
+    }
+    $tabs['reviews']['priority'] = 40;                
+
+    return $tabs;
+}
