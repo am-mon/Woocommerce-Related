@@ -1,0 +1,49 @@
+//Refresh Count
+add_filter( 'woocommerce_add_to_cart_fragments', function($fragments) {
+
+ob_start();
+?>
+
+<div class="cart-contents">
+    <?php echo WC()->cart->get_cart_contents_count(); ?>
+</div>
+
+<?php $fragments['div.cart-contents'] = ob_get_clean();
+
+return $fragments;
+
+} );
+
+
+
+//Refresh custom mini cart
+add_filter( 'woocommerce_add_to_cart_fragments', function($fragments) {
+
+    ob_start();
+    ?>
+
+    <div class=""header-quickcart"">
+        <?php woocommerce_mini_cart(); ?>
+    </div>
+
+    <?php $fragments['div.header-quickcart'] = ob_get_clean();
+
+    return $fragments;
+
+} );
+
+
+//Refresh Desktop Mini Cart which is wrapped with class name called "h_desktop_mini_cart"
+add_filter( 'woocommerce_add_to_cart_fragments', function($fragments) {
+    ob_start();
+    ?>
+
+    <div class="h_desktop_mini_cart">
+                <?php echo do_shortcode('[include slug="woocommerce/cart/mini-cart"]'); ?>
+    </div>
+
+    <?php $fragments['div.h_desktop_mini_cart'] = ob_get_clean();
+
+    return $fragments;
+
+} );
