@@ -1,0 +1,8 @@
+//Disable order on-hold status emails for admin
+add_filter( 'woocommerce_email_recipient_new_order', 'disable_new_order_for_on_hold_order_status', 10, 2 );
+function disable_new_order_for_on_hold_order_status( $recipient, $order = false ) {
+     if ( ! $order || ! is_a( $order, 'WC_Order' ) ) 
+         return $recipient;
+
+    return $order->get_status() === 'on-hold' ? '' : $recipient;
+ }
