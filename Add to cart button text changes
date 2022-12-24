@@ -1,0 +1,24 @@
+// Change add to cart text on product shop page & archive pages
+add_filter( 'woocommerce_product_add_to_cart_text', 'woocommerce_custom_product_loop_add_to_cart_text' );  
+function woocommerce_custom_product_loop_add_to_cart_text() {
+    return __( 'Add to Cart', 'woocommerce' );
+}
+
+
+
+// Out of stock button text change inside shop loop (for Woocommerce version 3 and above only)
+add_filter( 'woocommerce_loop_add_to_cart_link', 'out_of_stock_text_change', 20, 3 );
+function out_of_stock_text_change( $button, $product, $args = array() ) {
+    if( $product->is_in_stock() ) return $button;
+
+    $button_text = __('Out of Stock', 'woocommerce');
+    return sprintf( '<a class="button button_out_of_stock" href="' .get_permalink($product_id). '" style="%s">%s</a>', $style, $button_text );
+}
+
+
+// Change add to cart text on product detail page
+add_filter( 'woocommerce_product_single_add_to_cart_text', 'woocommerce_custom_product_detail_add_to_cart_text' ); 
+function woocommerce_custom_product_detail_add_to_cart_text() {
+    return __( 'Add to Cart', 'woocommerce' ); 
+}
+
